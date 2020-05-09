@@ -3,9 +3,9 @@
 <p>All Tags</p>
 
 <ul>
-  {% recursetree tags %}
+  {% recursetree all_tags %}
     <li>
-      {{ node.name }}
+      {{ node.text }}
       {% if not node.is_leaf_node %}
         <ul class="children">
           {{ children }}
