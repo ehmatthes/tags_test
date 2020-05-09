@@ -1,16 +1,16 @@
 from django.db import models
 
-from mptt.models import MPTTModel, TreeForeignKey
+import auto_prefetch
+
+from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 
 
-class Tag(MPTTModel):
+class Tag(MPTTModel, auto_prefetch.Model):
 
     text = models.CharField(max_length=100)
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
+    parent = auto_prefetch.ForeignKey('self', on_delete=models.CASCADE, null=True,
             blank=True, related_name='children')
 
-    class MPTTMeta:
-        order_insertion_by = ['text']
 
     def __str__(self):
         return self.text
@@ -20,3 +20,12 @@ class Tag(MPTTModel):
         """
         siblings = self.get_siblings(include_self=True)
         return all([s.is_leaf_node() for s in siblings])
+
+
+    class MPTTMeta:
+        order_insertion_by = ['text']
+
+    class MyManager(TreeManager, auto_prefetch.Manager):
+        pass
+
+    objects = MyManager()
