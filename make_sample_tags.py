@@ -21,7 +21,7 @@ print("Flushed db.")
 
 faker = Faker()
 
-NUM_TAGS = 300
+NUM_TAGS = 200
 
 all_tags = []
 for tag_num in range(NUM_TAGS):
