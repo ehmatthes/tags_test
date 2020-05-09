@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+
+tt_env/
+
+.DS_Store
+
+db.sqlite3
