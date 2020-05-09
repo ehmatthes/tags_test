@@ -10,7 +10,7 @@
 
 <ul>
   {% for tag in all_tags %}
-    <li>{{ tag }} {{ tag.all_siblings_leaf }}</li>
+    <li>{{ tag }} {{ tag|all_siblings_leaf:all_tags }}</li>
   {% empty %}
     No tags have been defined yet.
   {% endfor %}
