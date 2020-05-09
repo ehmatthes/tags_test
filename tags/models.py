@@ -14,3 +14,9 @@ class Tag(MPTTModel):
 
     def __str__(self):
         return self.text
+
+    def all_siblings_leaf(self):
+        """Return true if all siblings, including self, are leaf nodes.
+        """
+        siblings = self.get_siblings(include_self=True)
+        return all([s.is_leaf_node() for s in siblings])
