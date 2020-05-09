@@ -16,7 +16,7 @@ def index(request):
 
 def all_tags(request):
     """Simple view to run all_siblings_leaf."""
-    all_tags = Tag.objects.all()
+    all_tags = Tag.objects.all().select_related('parent')
 
     context = {'all_tags': all_tags}
 
