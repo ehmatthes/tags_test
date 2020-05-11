@@ -1,4 +1,4 @@
-This is a simple project for testing whether the [django-auto-prefetch]() package improves the efficiency of queries for a project using [django-mptt]().
+This is a simple project for testing whether the [django-auto-prefetch](https://pypi.org/project/django-auto-prefetch/) package improves the efficiency of queries for a project using [django-mptt](https://django-mptt.readthedocs.io/en/latest/).
 
 This is a very specific use case. I have a project that uses tags, which exist in a tree hierarchy. I want to treat nodes where all siblings are leaf nodes differently, so I implemented an `all_sibings_leaf()` method on the `Tag` model. This uses the `get_siblings()` method, which is supplied by mptt. But each call to this method costs one trip to the db, so on a page with a large number of tags, this is a lot of queries. I was able to bring this down to 1 query by fetching siblings myself through each node's parent, after using `select_related()` in the original query which I pass to `all_siblings_leaf()`.
 
@@ -23,4 +23,14 @@ I don't think `django-auto-prefetch` did anything in this demo. I don't think it
 
 - Download this repo.
 - Create a virtual environment, install requirements from requirement.txt.
-- 
+- Run `python manage.py migrate`.
+- Run `git checkout c49213`, and then run `python make_sample_tags.py`.
+  - This will generate 200 tags. Start the dev server, and visit the home page. You'll see 1 query on the home page, because this page is just using mptt's built-in recursetree tag.
+  - Click the link to *All tags with all_siblings_leaf*. You'll see 201 queries for this page, with the call to `all_siblings_leaf()`, which uses the default `get_siblings()` from mptt.
+  - This commit uses `auto_prefect.Model`.
+- Run `git checkout 5cf65f`. Reload the all_siblings_leaf page, and you'll see it's down to 160 queries.
+  - This uses my own code to get siblings in all_siblings_leaf. There are no queries for the root nodes, so there are fewer queries.
+- Run `git checkout 098b7c`. Reload the page, and you'll see it's down to 1 query.
+  - The query to get the tags has `select_related('parent')` now, and this queryset is passed to `all_siblings_leaf()`.
+
+This was a really interesting exercise, and I'm happy to answer any questions about what you see here.
