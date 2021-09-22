@@ -1,5 +1,5 @@
 asgiref==3.2.7
-Django==3.0.6
+Django==3.1.13
 django-auto-prefetch==0.0.5
 django-debug-toolbar==2.2
 django-extensions==2.2.9
